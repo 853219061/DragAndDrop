@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        * {
+            margin: 0;
+            padding: 0
+        }
+
+        div {
+            width: 100px;
+            height: 100px;
+            background-color: orange;
+            position: absolute;
+        }
+    </style>
+    <title>js简单拖拽</title>
+</head>
+
+<body>
+    <div>
+
+    </div>
+
+
+    <script>
+        var oDiv = document.getElementsByTagName('div')[0];
+        var lastX = 0;
+        var lastY = 0;
+        var iSpeedX = 0;
+        var iSpeedY = 0;
+
+        oDiv.onmousedown = function (e) {
+            var event = event || e;
+            var disX = event.clientX - this.offsetLeft;
+            var disY = event.clientY - this.offsetTop;
+            self = this;
+
+            document.onmousemove = function (e) {
+                var event = event || e;
+                var newLeft = event.clientX - disX;
+                var newTop = event.clientY - disY;
+
+                iSpeedX = newLeft - lastX;
+                iSpeedY = newTop - lastY;
+
+                lastX = newLeft;
+                lastY = newTop;
+
+
+                //    var oSpan = document.createElement('span');
+                //    oSpan .style.position = 'absolute';
+                //    oSpan .style.left = newLeft + 'px';
+                //    oSpan .style.top = newTop + 'px';
+                //    oSpan.style.width = '5px';
+                //    oSpan.style.height = '5px';
+                //    oSpan.style.backgroundColor = 'black';
+                //    document.body.appendChild(oSpan);
+
+
+                self.style.left = newLeft + 'px';
+                self.style.top = newTop + 'px';
+            }
+
+            document.onmouseup = function () {
+                document.onmouseup = null;
+                document.onmousemove = null;
+                startMove(self, iSpeedX, iSpeedY);
+            }
+        }
+
+        //这里用了重力项目的代码 达到鼠标释放后有一个速度的效果
+        function startMove(dom,iSpeedX ,iSpeedY) {
+            clearInterval(dom.timer);
+            // var iSpeedX = 6;
+            // var iSpeedY = 6;
+            var g = 3;
+            dom.timer = setInterval(function () {
+                iSpeedY += 3;
+                var newTop = dom.offsetTop + iSpeedY;
+                var newLeft = dom.offsetLeft + iSpeedX;
+
+
+
+                if (newTop >= document.documentElement.clientHeight - dom.clientHeight) {
+                    iSpeedY *= -1;
+                    newTop = document.documentElement.clientHeight - dom.clientHeight
+                    iSpeedY *= 0.8;
+                    iSpeedX *= 0.8;
+                }
+
+                if (newTop <= 0) {
+                    iSpeedY *= -1;
+                    newTop = 0;
+                    iSpeedY *= 0.8;
+                    iSpeedX *= 0.8;
+                }
+
+                if (newLeft <= 0) {
+                    iSpeedX *= -1;
+                    newLeft = 0;
+                    iSpeedY *= 0.8;
+                    iSpeedX *= 0.8;
+                }
+
+                if (newLeft >= document.documentElement.clientWidth - dom.clientWidth) {
+                    iSpeedX *= -1;
+                    newLeft = document.documentElement.clientWidth - dom.clientWidth;
+                    iSpeedY *= 0.8;
+                    iSpeedX *= 0.8;
+                }
+
+
+                if (Math.abs(iSpeedX) < 1) {
+                    iSpeedX = 0;
+                }
+
+
+                if (Math.abs(iSpeedY) < 1) {
+                    iSpeedY = 0;
+                }
+
+                if (iSpeedX == 0 && iSpeedY == 0
+                    && newTop == document.documentElement.clientHeight - dom.clientHeight
+                ) {
+                    clearInterval(dom.timer);
+                    console.log('over');
+                } else {
+                    dom.style.top = newTop + 'px';
+                    dom.style.left = newLeft + 'px';
+                }
+
+
+
+
+            }, 30)
+        }
+
+
+
+
+    </script>
+</body>
+
+</html>
