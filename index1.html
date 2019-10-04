@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+
+        *{margin : 0;
+        padding :0}
+
+        div{
+            width : 100px;
+            height : 100px;
+            background-color : orange;
+            position:absolute;
+        }
+    
+    </style>
+    <title>js简单拖拽</title>
+</head>
+<body>
+    <div>
+
+    </div>
+
+
+    <script>
+        var oDiv = document.getElementsByTagName('div')[0];
+
+        oDiv.onmousedown = function(e){
+           var event = event || e;
+           var disX = event.clientX - this.offsetLeft;
+           var disY = event.clientY - this.offsetTop;
+           self =this;
+
+           document.onmousemove = function (e){
+               var event = event || e;
+               var newLeft = event.clientX - disX;
+               var newTop = event.clientY-disY;
+
+               self .style.left = newLeft + 'px';
+                self .style.top = newTop + 'px';
+           }
+
+           document.onmouseup = function (){
+                document.onmouseup = null;
+                document.onmousemove = null;
+           }
+        }
+    </script>
+</body>
+</html>
